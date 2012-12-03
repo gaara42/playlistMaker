@@ -1,6 +1,6 @@
 #!/Python27/env python
 #Biafra Ahanonu
-#2012.10.23
+#2012.12.02
 
 #Makes .m3u extended playlist at first level folders in a directory
 
@@ -8,6 +8,8 @@
 import os,re,time
 #Import settings from settings.py
 from settings import *
+#Help filter out duplicates
+from sets import Set
 
 def folderBrowser():
 	#Opens a folder
@@ -60,24 +62,30 @@ def saveFilesToPlaylist(files,dir,dirname,CURRENT_DIR):
 	#Saves a list of files to a playlist
 
 	#Open connection, uses root as name for playlist
-	playlist = open(os.path.join(CURRENT_DIR,dirname,dirname+'_ssx42.m3u'),'w')
+	playlist = open(os.path.join(CURRENT_DIR,dirname,dirname+PLAYLIST_ID_TAG+'.m3u'),'w')
 	#Output playlist location
-	print os.path.join(CURRENT_DIR,dirname,dirname+'_ssx42.m3u')
+	print os.path.join(CURRENT_DIR,dirname,dirname+PLAYLIST_ID_TAG+'.m3u')
 	
 	#Extended M3U format used here
-	playlist.write('#EXTM3U\n')
+	if EXTENDED_M3U == 1:
+		playlist.write('#EXTM3U\n')
+
+	#Remove duplicates
+	files = sorted(set(files))
 
 	#Loop through each file
 	for filename in files:
-		actualFilename = os.path.basename(filename)
-		#Split then rejoin, remove extension
-		filenameName = actualFilename.split('.')
-		filenameName = '.'.join(filenameName[0:-1])
-		#Add name based filename
-		playlist.write('#EXTINF:'+filenameName+'\n')
+		if EXTENDED_M3U == 1:
+			actualFilename = os.path.basename(filename)
+			#Split then rejoin, remove extension
+			filenameName = actualFilename.split('.')
+			filenameName = '.'.join(filenameName[0:-1])
+			#Add name based filename
+			playlist.write('#EXTINF:'+filenameName+'\n')
 		#Write relative location of file
 		playlist.write(os.path.join(filename)+'\n')
 
+	#Close file id
 	playlist.close()
 
 def main():
@@ -109,7 +117,7 @@ def main():
 			saveFilesToPlaylist(filesToSave,subdirname,dirnameTitle,CURRENT_DIR)
 
 			#Add playlist to log
-			logFile.write(os.path.join(CURRENT_DIR,dirnameTitle,dirnameTitle+'_ssx42.m3u')+'\n')
+			logFile.write(os.path.join(CURRENT_DIR,dirnameTitle,dirnameTitle+PLAYLIST_ID_TAG)+'\n')
 
 		#Break the loop so we don't crawl through subdirectories and add playlists there
 		break
