@@ -1,7 +1,7 @@
 "None are so hopelessly enslaved as those who falsely believe they are free."
                                               Johann Wolfgang von Goethe
 
-Copyright (C) 2012 Biafra Ahanonu <bahanonu@gmail.com>
+Copyright (C) 2012 Biafra Ahanonu
 
 This license apply to all the files inside this program unless noted different for some files or portions of code inside these files.
 
